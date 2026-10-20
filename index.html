@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 3rd Anniversary!</title>
+    <style>
+        /* Mengatur tampilan dasar */
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* Supaya web tidak bisa di-scroll */
+            background-color: #000; /* Latar hitam agar tidak kedip abu-abu */
+        }
+
+        /* Tampilan halaman pembuka (Tombol Kejutan) */
+        #halaman-awal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #3b6382; /* Warna dari kamu */
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 100;
+        }
+        #halaman-awal button {
+            padding: 15px 30px; font-size: 20px; font-weight: bold;
+            background-color: #f1f57f; color: rgb(91, 155, 250);
+            border: none; border-radius: 30px; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        #halaman-awal button:hover { transform: scale(1.1); }
+
+        /* Tampilan halaman utama (Foto & Teks) */
+        #halaman-utama {
+            display: none; /* Disembunyikan sampai tombol diklik */
+            position: relative; height: 100%; width: 100%;
+        }
+
+        /* Container khusus untuk foto latar (Disesuaikan agar foto tidak terpotong di HP) */
+        .bg-slider {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: contain; /* Foto tampil penuh & utuh tanpa terpotong */
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 1s ease-in-out; /* Efek halus saat ganti foto */
+        }
+        .bg-slider.aktif {
+            opacity: 1;
+        }
+
+        /* Efek gelap di atas foto agar teks terbaca jelas */
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); 
+            z-index: 5;
+        }
+
+        /* Posisi teks di tengah */
+        .teks-tengah {
+            position: relative; z-index: 10;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            height: 100%; color: white; text-align: center; padding: 0 20px;
+        }
+        h1 { font-size: 3rem; margin-bottom: 10px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body>
+
+    <!-- Halaman Pembuka -->
+    <div id="halaman-awal">
+        <button onclick="bukaKejutan()">Hai amad, klik tombol ini yaa</button>
+    </div>
+
+    <!-- Halaman Utama (Isi Website) -->
+    <div id="halaman-utama">
+        <!-- Layer foto untuk pergantian mulus -->
+        <div id="bg1" class="bg-slider aktif"></div>
+        <div id="bg2" class="bg-slider"></div>
+
+        <div class="overlay"></div>
+        <div class="teks-tengah">
+            <h1>Happy 3rd Anniversary!</h1>
+        </div>
+    </div>
+
+    <!-- Pemutar Lagu -->
+    <audio id="musik" loop>
+        <source src="assets/music/lagu.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // DAFTAR FOTO: 56 Foto lengkap
+        const daftarFoto = [
+            "assets/img/foto(1).png",
+            "assets/img/foto(51).png",
+            "assets/img/foto(2).png",
+            "assets/img/foto(3).png",
+            "assets/img/foto(4).png",
+            "assets/img/foto(34).jpeg",
+            "assets/img/foto(35).jpeg",
+            "assets/img/foto(5).png",
+            "assets/img/foto(6).png",
+            "assets/img/foto(16).png",
+            "assets/img/foto(41).jpeg",
+            "assets/img/foto(42).jpeg",
+            "assets/img/foto(17).png",
+            "assets/img/foto(25).jpeg",
+            "assets/img/foto(23).jpeg",
+            "assets/img/foto(32).jpeg",
+            "assets/img/foto(33).jpeg",
+            "assets/img/foto(21).jpeg",
+            "assets/img/foto(22).jpeg",
+            "assets/img/foto(47).jpeg",
+            "assets/img/foto(48).jpeg",
+            "assets/img/foto(24).jpeg",
+            "assets/img/foto(36).jpeg",
+            "assets/img/foto(37).jpeg",
+            "assets/img/foto(38).jpeg",
+            "assets/img/foto(7).png",
+            "assets/img/foto(18).png",
+            "assets/img/foto(19).png",
+            "assets/img/foto(26).jpeg",
+            "assets/img/foto(27).jpeg",
+            "assets/img/foto(8).png",
+            "assets/img/foto(9).png",
+            "assets/img/foto(20).png",
+            "assets/img/foto(49).jpeg",
+            "assets/img/foto(50).jpeg",
+            "assets/img/foto(28).jpeg",
+            "assets/img/foto(10).png",
+            "assets/img/foto(11).png",
+            "assets/img/foto(31).jpeg",
+            "assets/img/foto(39).jpeg",
+            "assets/img/foto(29).jpeg",
+            "assets/img/foto(30).jpeg",
+            "assets/img/foto(40).jpeg",
+            "assets/img/foto(45).png",
+            "assets/img/foto(46).png",
+            "assets/img/foto(12).png",
+            "assets/img/foto(13).png",
+            "assets/img/foto(15).png",
+            "assets/img/foto(44).jpeg",
+            "assets/img/foto(43).jpeg",
+            "assets/img/foto(14).jpeg",
+            "assets/img/foto(52).png",
+            "assets/img/foto(53).png",
+            "assets/img/foto(54).png",
+            "assets/img/foto(55).png",
+            "assets/img/foto(56).png"
+        ];
+        
+        // Preload foto di awal agar tidak kedip saat ganti
+        daftarFoto.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+
+        let indeksFoto = 0;
+        let bgAktif = 1;
+
+        const halamanUtama = document.getElementById("halaman-utama");
+        const halamanAwal = document.getElementById("halaman-awal");
+        const musik = document.getElementById("musik");
+        const bg1 = document.getElementById("bg1");
+        const bg2 = document.getElementById("bg2");
+
+        function bukaKejutan() {
+            // Sembunyikan halaman awal, tampilkan halaman utama
+            halamanAwal.style.display = "none";
+            halamanUtama.style.display = "block";
+            
+            // Putar lagu
+            musik.play();
+
+            // Atur foto pertama
+            bg1.style.backgroundImage = `url('${daftarFoto[indeksFoto]}')`;
+
+            // Durasi disesuaikan pas 4 menit 35 detik untuk 56 foto (~4910 ms per foto)
+            setInterval(() => {
+                indeksFoto = (indeksFoto + 1) % daftarFoto.length;
+                const fotoBerikutnya = `url('${daftarFoto[indeksFoto]}')`;
+
+                if (bgAktif === 1) {
+                    bg2.style.backgroundImage = fotoBerikutnya;
+                    bg2.classList.add("aktif");
+                    bg1.classList.remove("aktif");
+                    bgAktif = 2;
+                } else {
+                    bg1.style.backgroundImage = fotoBerikutnya;
+                    bg1.classList.add("aktif");
+                    bg2.classList.remove("aktif");
+                    bgAktif = 1;
+                }
+            }, 4910);
+        }
+    </script>
+
+</body>
+</html>
